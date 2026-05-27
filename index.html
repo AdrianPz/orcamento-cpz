@@ -618,21 +618,29 @@ function calcular() {
     });
 
     document.getElementById("totalCameras").textContent = qtdCameras;
-    let nivel = qtdCameras >= 9 ? "dificil" : qtdCameras >= 5 ? "medio" : "facil";
+    let nivel = qtdCameras >= 33 ? "dificil" : qtdCameras >= 9 ? "medio" : "facil";
     document.getElementById("totalCameras").className = "campo-automatico nivel-" + nivel;
 
-    const tabela = {
+    const usarSocio    = document.getElementById("usarSocio").checked;
+    const tabelaSolo = {
         analogica: { facil:1.6, medio:1.7, dificil:1.7 },
         ip:        { facil:1.7, medio:1.9, dificil:2.0 },
         wifi:      { facil:2.0, medio:2.1, dificil:2.2 },
         automacao: { facil:2.2, medio:2.4, dificil:2.7 },
         sensores:  { facil:2.0, medio:2.2, dificil:2.3 },
     };
+    const tabelaSocio = {
+        analogica: { facil:2.1, medio:2.2, dificil:2.2 },
+        ip:        { facil:2.3, medio:2.4, dificil:2.6 },
+        wifi:      { facil:2.6, medio:2.7, dificil:2.8 },
+        automacao: { facil:3.0, medio:3.2, dificil:3.5 },
+        sensores:  { facil:2.8, medio:3.0, dificil:3.2 },
+    };
+    const tabela = usarSocio ? tabelaSocio : tabelaSolo;
     const mult = (tabela[tipo] || tabela.analogica)[nivel];
 
     const diasTrabalho = Number(document.getElementById("diasTrabalho").value) || 0;
     const diasDiarista = Number(document.getElementById("diasDiarista").value) || 0;
-    const usarSocio    = document.getElementById("usarSocio").checked;
 
     const deslocamento = 50 * diasTrabalho;
     const diarias      = diasTrabalho * 500 * (usarSocio ? 2 : 1);
