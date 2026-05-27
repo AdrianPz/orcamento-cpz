@@ -257,10 +257,6 @@ button:hover { filter: brightness(1.08); }
         </div>
         <img class="logo-empresa" src="cpz-logo.png" alt="CPZ Digital">
     </div>
-
-    <!-- STATUS DO BANCO DE DADOS -->
-    <div class="db-status">
-        <div class="db-dot" id="dbDot"></div>
         <div class="db-texto" id="dbTexto">Aguardando banco de dados...</div>
     </div>
 
@@ -467,12 +463,7 @@ function parseCsv(texto) {
    ATUALIZAR ESTADO DO BANCO
    ============================================================ */
 
-function setDbStatus(estado, texto) {
-    const dot  = document.getElementById("dbDot");
-    const msg  = document.getElementById("dbTexto");
-    dot.className = "db-dot " + estado;
-    msg.innerHTML = texto;
-}
+function setDbStatus() {}
 
 function carregarProdutos(lista) {
     produtos = lista;
