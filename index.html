@@ -120,9 +120,16 @@ select { background: #f4f7fb; color: #12151a; min-width: 0; }
 .secao-titulo { margin-top: 0; }
 
 .produtos-grid { display: grid; gap: 10px; }
+
+/* grade com 3 colunas para infraestrutura (sem número) */
 .produto-linha {
     display: grid;
     grid-template-columns: 34px minmax(0,1fr) 72px 36px;
+    gap: 10px; align-items: center;
+}
+.infra-linha {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 72px 36px;
     gap: 10px; align-items: center;
 }
 .produtos-cabecalho { color: #aaa; font-size: 13px; }
@@ -204,6 +211,7 @@ button:hover { filter: brightness(1.08); }
     body { padding: 10px; }
     .container { padding: 14px; }
     .produto-linha { grid-template-columns: 32px minmax(0,1fr) 62px 32px; gap: 8px; }
+    .infra-linha   { grid-template-columns: minmax(0,1fr) 62px 32px; gap: 8px; }
     .opcoes-projeto { gap: 8px; }
 }
 
@@ -248,6 +256,7 @@ button:hover { filter: brightness(1.08); }
         <span id="totalCameras" class="campo-automatico">0</span>
     </div>
 
+    <!-- PRODUTOS -->
     <div class="secao">
         <label class="secao-titulo">Itens do projeto</label>
 
@@ -265,8 +274,22 @@ button:hover { filter: brightness(1.08); }
         </button>
     </div>
 
-    <label>Infraestrutura (R$)</label>
-    <input type="number" id="infra" value="36.97" min="0" step="0.01">
+    <!-- INFRAESTRUTURA -->
+    <div class="secao">
+        <label class="secao-titulo">Infraestrutura</label>
+
+        <div class="infra-linha produtos-cabecalho">
+            <span>Item</span>
+            <span>Qtd.</span>
+            <span></span>
+        </div>
+
+        <div class="produtos-grid" id="listaInfra"></div>
+
+        <button type="button" class="botao-adicionar" onclick="adicionarInfra()">
+            + Adicionar item
+        </button>
+    </div>
 
     <div class="linha-dupla">
         <div>
@@ -294,9 +317,16 @@ button:hover { filter: brightness(1.08); }
 
 <script>
 
-const SHEETS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQg5zxUiq6B03q8unGatN0ATJz1aLR89j34Xe3Z0-a8DFQyh3k-HpZsMngRxVTyrK9quopeBKCHTGlw/pub?gid=1778121456&single=true&output=csv";
+// ============================================================
+// URLS DAS ABAS DA PLANILHA
+// Produtos:       aba principal (gid=1778121456)
+// Infraestrutura: troque pelo gid da sua nova aba
+// ============================================================
+const URL_PRODUTOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQg5zxUiq6B03q8unGatN0ATJz1aLR89j34Xe3Z0-a8DFQyh3k-HpZsMngRxVTyrK9quopeBKCHTGlw/pub?gid=1778121456&single=true&output=csv";
+const URL_INFRA    = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQg5zxUiq6B03q8unGatN0ATJz1aLR89j34Xe3Z0-a8DFQyh3k-HpZsMngRxVTyrK9quopeBKCHTGlw/pub?gid=SUBSTITUA_PELO_GID_DA_ABA_INFRA&single=true&output=csv";
 
 let produtos = [];
+let itensInfra = [];  // [{nome, valor}]
 
 const ordemCategorias = [
     "Câmeras","Gravadores","Armazenamento","Cabos",
@@ -357,7 +387,13 @@ function pegarValorProduto(codigo) {
     return p ? p.valor : 0;
 }
 
-function parseCsv(texto) {
+function pegarValorInfra(nome) {
+    const p = itensInfra.find(i => i.nome === nome);
+    return p ? p.valor : 0;
+}
+
+// ── PARSER CSV ──
+function parseCsv(texto, temCodigo) {
     const linhas = texto.trim().split(/\r?\n/);
     if (linhas.length < 2) return [];
     const sep = linhas[0].includes(";") ? ";" : ",";
@@ -373,34 +409,60 @@ function parseCsv(texto) {
             else { atual += linha[c]; }
         }
         campos.push(atual.trim());
-        if (campos.length < 3) continue;
-        const codigo = campos[0].replace(/^"|"$/g, "").trim();
-        const nome   = campos[1].replace(/^"|"$/g, "").trim();
-        const valor  = parseFloat(campos[2].replace(/^"|"$/g, "").replace(",", ".").trim());
-        if (!codigo || !nome || isNaN(valor)) continue;
-        resultado.push({ codigo, nome: simplificarNome(nome), valor });
+
+        if (temCodigo) {
+            if (campos.length < 3) continue;
+            const codigo = campos[0].replace(/^"|"$/g, "").trim();
+            const nome   = campos[1].replace(/^"|"$/g, "").trim();
+            const valor  = parseFloat(campos[2].replace(/^"|"$/g, "").replace(",", ".").trim());
+            if (!codigo || !nome || isNaN(valor)) continue;
+            resultado.push({ codigo, nome: simplificarNome(nome), valor });
+        } else {
+            if (campos.length < 2) continue;
+            const nome  = campos[0].replace(/^"|"$/g, "").trim();
+            const valor = parseFloat(campos[1].replace(/^"|"$/g, "").replace(",", ".").trim());
+            if (!nome || isNaN(valor)) continue;
+            resultado.push({ nome: simplificarNome(nome), valor });
+        }
     }
     return resultado;
 }
 
+// ── CARREGAR BANCO ──
 async function carregarBanco() {
     try {
-        const resp = await fetch(SHEETS_URL);
-        if (!resp.ok) throw new Error("HTTP " + resp.status);
-        const texto = await resp.text();
-        const lista = parseCsv(texto);
-        if (lista.length === 0) throw new Error("Planilha vazia");
-        produtos = lista;
-        document.querySelectorAll(".produto-select").forEach(sel => {
-            const v = sel.value;
-            preencherSelectProduto(sel, v);
-        });
+        const [rProd, rInfra] = await Promise.all([
+            fetch(URL_PRODUTOS),
+            fetch(URL_INFRA)
+        ]);
+
+        if (rProd.ok) {
+            const lista = parseCsv(await rProd.text(), true);
+            if (lista.length > 0) {
+                produtos = lista;
+                document.querySelectorAll(".produto-select").forEach(sel => {
+                    preencherSelectProduto(sel, sel.value);
+                });
+            }
+        }
+
+        if (rInfra.ok) {
+            const lista = parseCsv(await rInfra.text(), false);
+            if (lista.length > 0) {
+                itensInfra = lista;
+                document.querySelectorAll(".infra-select").forEach(sel => {
+                    preencherSelectInfra(sel, sel.value);
+                });
+            }
+        }
+
         calcular();
     } catch(e) {
         console.error("Erro ao carregar banco:", e.message);
     }
 }
 
+// ── SELECTS DE PRODUTO ──
 function preencherSelectProduto(sel, valorSelecionado) {
     sel.innerHTML = "";
     sel.add(new Option("Selecione um produto", ""));
@@ -433,18 +495,33 @@ function esconderCodigo(sel) {
     if (opt && opt.dataset.nome) opt.textContent = opt.dataset.nome;
 }
 
-let contador = 0;
+// ── SELECTS DE INFRA ──
+function preencherSelectInfra(sel, valorSelecionado) {
+    sel.innerHTML = "";
+    sel.add(new Option("Selecione um item", ""));
+    itensInfra.forEach(item => {
+        const texto = `${item.nome} - ${formatarMoeda(item.valor)}`;
+        const opt = new Option(texto, item.nome);
+        opt.dataset.completo = texto;
+        opt.dataset.nome = item.nome;
+        sel.appendChild(opt);
+    });
+    sel.value = valorSelecionado || "";
+    esconderCodigo(sel);
+}
+
+// ── ADICIONAR PRODUTO ──
+let contadorProd = 0;
 
 function adicionarProduto(codigo, quantidade) {
-    if (produtos.length === 0) { alert("Aguarde o banco de dados carregar."); return; }
-    contador++;
+    contadorProd++;
     const lista = document.getElementById("listaProdutos");
     const linha = document.createElement("div");
     linha.className = "produto-linha item-produto";
 
     const numero = document.createElement("div");
     numero.className = "produto-numero";
-    numero.textContent = contador;
+    numero.textContent = contadorProd;
 
     const sel = document.createElement("select");
     sel.className = "produto-select";
@@ -456,7 +533,7 @@ function adicionarProduto(codigo, quantidade) {
 
     const remover = document.createElement("button");
     remover.type = "button"; remover.className = "botao-remover";
-    remover.innerHTML = "×"; remover.title = "Remover item";
+    remover.innerHTML = "×";
 
     sel.addEventListener("focus",     () => mostrarCodigo(sel));
     sel.addEventListener("mousedown", () => mostrarCodigo(sel));
@@ -464,23 +541,57 @@ function adicionarProduto(codigo, quantidade) {
     sel.addEventListener("change",    () => { calcular(); setTimeout(() => esconderCodigo(sel), 80); });
     sel.addEventListener("blur",      () => esconderCodigo(sel));
     qtd.addEventListener("input", calcular);
-    remover.addEventListener("click", () => { linha.remove(); renumerar(); calcular(); });
+    remover.addEventListener("click", () => { linha.remove(); renumerarProd(); calcular(); });
 
     linha.appendChild(numero);
     linha.appendChild(sel);
     linha.appendChild(qtd);
     linha.appendChild(remover);
     lista.appendChild(linha);
-    renumerar();
+    renumerarProd();
     calcular();
 }
 
-function renumerar() {
+function renumerarProd() {
     document.querySelectorAll(".item-produto .produto-numero").forEach((n, i) => {
         n.textContent = i + 1;
     });
 }
 
+// ── ADICIONAR INFRA ──
+function adicionarInfra(nome, quantidade) {
+    const lista = document.getElementById("listaInfra");
+    const linha = document.createElement("div");
+    linha.className = "infra-linha item-infra";
+
+    const sel = document.createElement("select");
+    sel.className = "infra-select";
+    preencherSelectInfra(sel, nome);
+
+    const qtd = document.createElement("input");
+    qtd.type = "number"; qtd.className = "produto-qtd";
+    qtd.min = "0"; qtd.value = quantidade || 0;
+
+    const remover = document.createElement("button");
+    remover.type = "button"; remover.className = "botao-remover";
+    remover.innerHTML = "×";
+
+    sel.addEventListener("focus",     () => mostrarCodigo(sel));
+    sel.addEventListener("mousedown", () => mostrarCodigo(sel));
+    sel.addEventListener("keydown",   () => mostrarCodigo(sel));
+    sel.addEventListener("change",    () => { calcular(); setTimeout(() => esconderCodigo(sel), 80); });
+    sel.addEventListener("blur",      () => esconderCodigo(sel));
+    qtd.addEventListener("input", calcular);
+    remover.addEventListener("click", () => { linha.remove(); calcular(); });
+
+    linha.appendChild(sel);
+    linha.appendChild(qtd);
+    linha.appendChild(remover);
+    lista.appendChild(linha);
+    calcular();
+}
+
+// ── CÁLCULO ──
 function calcular() {
     const tipoEl = document.querySelector('input[name="tipo"]:checked');
     const tipo = tipoEl ? tipoEl.value : "analogica";
@@ -491,6 +602,13 @@ function calcular() {
         const qtd = Number(linha.querySelector(".produto-qtd").value) || 0;
         if (sel.value.startsWith("CAM-")) qtdCameras += qtd;
         totalProdutos += pegarValorProduto(sel.value) * qtd;
+    });
+
+    let totalInfra = 0;
+    document.querySelectorAll(".item-infra").forEach(linha => {
+        const sel = linha.querySelector(".infra-select");
+        const qtd = Number(linha.querySelector(".produto-qtd").value) || 0;
+        totalInfra += pegarValorInfra(sel.value) * qtd;
     });
 
     document.getElementById("totalCameras").textContent = qtdCameras;
@@ -506,7 +624,6 @@ function calcular() {
     };
     const mult = (tabela[tipo] || tabela.analogica)[nivel];
 
-    const infra        = Number(document.getElementById("infra").value) || 0;
     const diasTrabalho = Number(document.getElementById("diasTrabalho").value) || 0;
     const diasDiarista = Number(document.getElementById("diasDiarista").value) || 0;
     const usarSocio    = document.getElementById("usarSocio").checked;
@@ -514,7 +631,7 @@ function calcular() {
     const deslocamento = 50 * diasTrabalho;
     const diarias      = diasTrabalho * 500 * (usarSocio ? 2 : 1);
     const diarista     = diasDiarista * 120;
-    const despesas     = deslocamento + infra + diarias + diarista;
+    const despesas     = deslocamento + totalInfra + diarias + diarista;
     const valorFinal   = Math.round((totalProdutos * mult + despesas) / 50) * 50;
 
     document.getElementById("resultado").innerHTML =
@@ -527,8 +644,12 @@ function calcular() {
                 <strong>${formatarMoeda(totalProdutos)}</strong>
             </div>
             <div class="info-linha">
+                <span>Infraestrutura</span>
+                <strong>${formatarMoeda(totalInfra)}</strong>
+            </div>
+            <div class="info-linha">
                 <span>Serviço e despesas</span>
-                <strong>${formatarMoeda(despesas)}</strong>
+                <strong>${formatarMoeda(despesas - totalInfra)}</strong>
             </div>
         </div>`;
 }
@@ -537,6 +658,7 @@ function abrirPagamentos() {
     alert("Próxima etapa: formas de pagamento.");
 }
 
+// ── EVENTOS ──
 document.querySelectorAll('input[name="tipo"]').forEach(cb => {
     cb.addEventListener("change", function() {
         document.querySelectorAll('input[name="tipo"]').forEach(o => o.checked = false);
@@ -547,6 +669,12 @@ document.querySelectorAll('input[name="tipo"]').forEach(cb => {
 document.querySelectorAll('input[type="number"]').forEach(c => c.addEventListener("input", calcular));
 document.getElementById("usarSocio").addEventListener("change", calcular);
 
+// ── INIT ──
+// Abre uma linha em branco de produto e uma de infra por padrão
+adicionarProduto();
+adicionarInfra();
+
+// Carrega os dados da planilha
 carregarBanco();
 
 </script>
