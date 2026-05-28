@@ -222,6 +222,8 @@ body {
     color: #4ade80;
     font-weight: bold;
     flex: 1;
+    cursor: pointer;
+    user-select: none;
 }
 
 /* controles +/- */
@@ -748,6 +750,8 @@ function adicionarProduto(codigo, quantidade) {
     qtdInput.addEventListener("focus",()=>{ if(qtdInput.value==="0") qtdInput.value=""; });
     qtdInput.addEventListener("blur",()=>{ if(qtdInput.value==="") { qtdInput.value="0"; calcular(); } });
     btnDel.addEventListener("click",()=>{ card.remove(); renumerarProd(); calcular(); });
+    preco.addEventListener("click",()=>ativarEdicaoPreco(card));
+    preco.title="Toque para editar o valor";
 
     renumerarProd();
     atualizarPrecoItem(card,true);
@@ -756,12 +760,21 @@ function adicionarProduto(codigo, quantidade) {
 function atualizarPrecoItem(card, recalcular) {
     const busca=card.querySelector(".item-busca-wrapper");
     const qtd=Number(card.querySelector(".qtd-num").value)||0;
-    const preco=card.querySelector(".item-preco");
+    const precoEl=card.querySelector(".item-preco");
     const codigo=busca?busca.getValor():"";
     const p=produtos.find(x=>x.codigo===codigo);
-    if (p && qtd>0) preco.textContent=fmt(p.valor*qtd);
-    else if (p) preco.textContent=fmt(p.valor)+" / un.";
-    else preco.textContent="—";
+    // só atualiza se não estiver em edição manual
+    if (!precoEl.dataset.manual) {
+        if (p) {
+            precoEl.dataset.valorUnit = p.valor;
+            precoEl.textContent = qtd>0 ? fmt(p.valor*qtd)+" ✎" : fmt(p.valor)+" / un. ✎";
+        } else {
+            precoEl.dataset.valorUnit = "";
+            precoEl.textContent="—";
+        }
+    } else {
+        // já tem valor manual, só recalcula
+    }
     if (recalcular) calcular();
 }
 
@@ -802,6 +815,8 @@ function adicionarInfra(nome, quantidade) {
     qtdInput.addEventListener("focus",()=>{ if(qtdInput.value==="0") qtdInput.value=""; });
     qtdInput.addEventListener("blur",()=>{ if(qtdInput.value==="") { qtdInput.value="0"; calcular(); } });
     btnDel.addEventListener("click",()=>{ card.remove(); calcular(); });
+    preco.addEventListener("click",()=>ativarEdicaoPreco(card));
+    preco.title="Toque para editar o valor";
 
     atualizarPrecoInfra(card,true);
 }
@@ -809,13 +824,55 @@ function adicionarInfra(nome, quantidade) {
 function atualizarPrecoInfra(card, recalcular) {
     const busca=card.querySelector(".item-busca-wrapper");
     const qtd=Number(card.querySelector(".qtd-num").value)||0;
-    const preco=card.querySelector(".item-preco");
+    const precoEl=card.querySelector(".item-preco");
     const nome=busca?busca.getValor():"";
     const p=itensInfra.find(x=>x.nome===nome);
-    if (p && qtd>0) preco.textContent=fmt(p.valor*qtd);
-    else if (p) preco.textContent=fmt(p.valor)+" / un.";
-    else preco.textContent="—";
+    if (!precoEl.dataset.manual) {
+        if (p) {
+            precoEl.dataset.valorUnit = p.valor;
+            precoEl.textContent = qtd>0 ? fmt(p.valor*qtd)+" ✎" : fmt(p.valor)+" / un. ✎";
+        } else {
+            precoEl.dataset.valorUnit = "";
+            precoEl.textContent="—";
+        }
+    }
     if (recalcular) calcular();
+}
+
+
+// ── EDIÇÃO DE PREÇO ──
+function ativarEdicaoPreco(card) {
+    const precoEl = card.querySelector(".item-preco");
+    const qtd = Number(card.querySelector(".qtd-num").value) || 1;
+    const valorAtual = parseFloat(precoEl.dataset.valorUnit) || 0;
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.step = "0.01";
+    input.min = "0";
+    input.value = valorAtual || "";
+    input.placeholder = "Valor unit. (R$)";
+    input.style.cssText = "width:110px;height:32px;padding:4px 8px;border-radius:6px;border:1.5px solid var(--blue);background:var(--input-bg);color:var(--input-color);font-size:13px;font-weight:bold;font-family:inherit;outline:none;";
+
+    precoEl.textContent = "";
+    precoEl.appendChild(input);
+    input.focus(); input.select();
+
+    function confirmar() {
+        const novo = parseFloat(input.value);
+        if (!isNaN(novo) && novo >= 0) {
+            precoEl.dataset.valorUnit = novo;
+            precoEl.dataset.manual = "1";
+            precoEl.textContent = qtd > 0 ? fmt(novo * qtd) + " ✎" : fmt(novo) + " / un. ✎";
+        } else {
+            precoEl.dataset.manual = "";
+            precoEl.textContent = valorAtual > 0 ? fmt(valorAtual * qtd) + " ✎" : "—";
+        }
+        calcular();
+    }
+
+    input.addEventListener("blur", confirmar);
+    input.addEventListener("keydown", e => { if (e.key === "Enter") { input.blur(); } if (e.key === "Escape") { precoEl.dataset.manual=""; input.blur(); } });
 }
 
 // ── CÁLCULO ──
@@ -830,17 +887,17 @@ function calcular() {
         const codigo=busca?busca.getValor():"";
         const qtd=Number(card.querySelector(".qtd-num").value)||0;
         if (codigo.startsWith("CAM-")) qtdCameras+=qtd;
-        const p=produtos.find(x=>x.codigo===codigo);
-        if (p) totalProd+=p.valor*qtd;
+        const precoEl=card.querySelector(".item-preco");
+        const valorUnit=parseFloat(precoEl.dataset.valorUnit)||0;
+        totalProd+=valorUnit*qtd;
     });
 
     let totalInfra=0;
     document.querySelectorAll(".item-infra").forEach(card=>{
-        const busca=card.querySelector(".item-busca-wrapper");
-        const nome=busca?busca.getValor():"";
         const qtd=Number(card.querySelector(".qtd-num").value)||0;
-        const p=itensInfra.find(x=>x.nome===nome);
-        if (p) totalInfra+=p.valor*qtd;
+        const precoEl=card.querySelector(".item-preco");
+        const valorUnit=parseFloat(precoEl.dataset.valorUnit)||0;
+        totalInfra+=valorUnit*qtd;
     });
 
     const cam=document.getElementById("totalCameras");
