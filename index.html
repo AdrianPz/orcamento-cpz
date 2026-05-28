@@ -2,61 +2,63 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CPZ Orçamento Inteligente</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>CPZ Orçamento</title>
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
 
-/* ── TEMA ESCURO (padrão) ── */
 :root {
-    --bg:        #0f1115;
-    --surface:   #181b20;
-    --border:    #272b33;
-    --border2:   #2f3540;
-    --blue:      #0A84FF;
-    --blue-dim:  #17324f;
-    --text:      #ffffff;
-    --muted:     #8f98a8;
-    --label:     #c7ced8;
-    --item-bg:   #23272f;
-    --ok:        #14532d;
-    --warn:      #854d0e;
-    --danger:    #7f1d1d;
+    --bg:             #0f1115;
+    --surface:        #181b20;
+    --border:         #272b33;
+    --border2:        #2f3540;
+    --blue:           #0A84FF;
+    --blue-dim:       #17324f;
+    --text:           #ffffff;
+    --muted:          #8f98a8;
+    --label:          #c7ced8;
+    --item-bg:        #23272f;
+    --ok:             #14532d;
+    --warn:           #854d0e;
+    --danger:         #7f1d1d;
+    --ok-text:        #4ade80;
+    --warn-text:      #facc15;
+    --danger-text:    #f87171;
     --dropdown-bg:    #1e2229;
     --dropdown-grupo: #181b20;
     --input-bg:       #23272f;
     --input-color:    #ffffff;
-    --select-bg:      #23272f;
-    --select-color:   #ffffff;
+    --green:          #16803a;
 }
 
-/* ── TEMA CLARO ── */
 @media (prefers-color-scheme: light) {
     :root {
-        --bg:        #f0f2f5;
-        --surface:   #ffffff;
-        --border:    #dde1e7;
-        --border2:   #c8cdd6;
-        --blue:      #0A84FF;
-        --blue-dim:  #dbeeff;
-        --text:      #0d1117;
-        --muted:     #6b7585;
-        --label:     #374151;
-        --item-bg:   #f4f6f9;
-        --ok:        #dcfce7;
-        --warn:      #fef9c3;
-        --danger:    #fee2e2;
+        --bg:             #f0f2f5;
+        --surface:        #ffffff;
+        --border:         #dde1e7;
+        --border2:        #c8cdd6;
+        --blue:           #0A84FF;
+        --blue-dim:       #dbeeff;
+        --text:           #0d1117;
+        --muted:          #6b7585;
+        --label:          #374151;
+        --item-bg:        #f4f6f9;
+        --ok:             #dcfce7;
+        --warn:           #fef9c3;
+        --danger:         #fee2e2;
+        --ok-text:        #15803d;
+        --warn-text:      #a16207;
+        --danger-text:    #dc2626;
         --dropdown-bg:    #ffffff;
         --dropdown-grupo: #f4f6f9;
         --input-bg:       #ffffff;
         --input-color:    #0d1117;
-        --select-bg:      #ffffff;
-        --select-color:   #0d1117;
+        --green:          #16803a;
     }
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
     margin: 0;
@@ -64,73 +66,222 @@ body {
     background: var(--bg);
     color: var(--text);
     font-family: 'DM Sans', Arial, sans-serif;
-    padding: 16px;
+    padding: 12px 12px 100px;
 }
 
 .container {
     max-width: 480px;
     margin: auto;
-    background: var(--surface);
-    padding: 18px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    box-shadow: 0 18px 45px rgba(0,0,0,0.35);
 }
 
+/* ── TOPO ── */
 .topo {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 18px;
+    gap: 12px;
+    margin-bottom: 14px;
+    background: var(--surface);
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
 }
-.topo h2 { margin: 2px 0 0; font-size: 25px; }
-.subtitulo { margin: 0; color: var(--muted); font-size: 13px; }
+.topo h2 { margin: 0; font-size: 20px; }
+.subtitulo { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
 .logo-empresa {
-    width: 190px; max-width: 52%; height: auto;
-    border-radius: 8px; background: #fff;
-    padding: 5px;
-    box-shadow: 0 8px 18px rgba(10,132,255,0.22);
+    width: 130px; height: auto;
+    border-radius: 6px; background: #fff;
+    padding: 4px;
 }
 
-.container > label,
-.linha-dupla label,
-.secao-titulo {
-    display: block;
-    color: var(--label);
+/* ── CARDS ── */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+}
+.card-titulo {
     font-size: 13px;
     font-weight: bold;
-    margin-top: 16px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+
+/* ── TIPO PROJETO ── */
+.tipos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+.tipo-btn {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 42px;
+    background: var(--item-bg);
+    border: 1.5px solid var(--border2);
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    color: var(--label);
+    transition: all 0.15s;
+    user-select: none;
+}
+.tipo-btn.ativo {
+    background: var(--blue-dim);
+    border-color: var(--blue);
+    color: var(--blue);
+}
+.tipo-btn input { display: none; }
+
+/* ── APOIO TÉCNICO ── */
+.apoio-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px;
+    width: 100%; min-height: 42px;
+    margin-top: 8px;
+    background: var(--item-bg);
+    border: 1.5px solid var(--border2);
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    color: var(--label);
+    transition: all 0.15s;
+    user-select: none;
+}
+.apoio-btn.ativo {
+    background: var(--blue-dim);
+    border-color: var(--blue);
+    color: var(--blue);
+}
+.apoio-btn input { display: none; }
+
+/* ── TOTAL CÂMERAS ── */
+.cameras-row {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--item-bg);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.cameras-label { font-size: 13px; font-weight: bold; color: var(--muted); }
+.cameras-badge {
+    min-width: 52px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px;
+    background: var(--item-bg);
+    font-weight: bold; font-size: 20px;
+    color: var(--text);
+    border: 1.5px solid var(--border2);
+    transition: background 0.2s, color 0.2s;
+}
+.cameras-badge.facil   { background: var(--ok);    color: var(--ok-text);     border-color: transparent; }
+.cameras-badge.medio   { background: var(--warn);   color: var(--warn-text);   border-color: transparent; }
+.cameras-badge.dificil { background: var(--danger); color: var(--danger-text); border-color: transparent; }
+
+/* ── ITENS ── */
+.item-card {
+    background: var(--item-bg);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 8px;
+    animation: slideIn 0.15s ease;
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.item-topo {
+    display: flex; align-items: center; gap: 8px;
     margin-bottom: 8px;
 }
+.item-numero {
+    min-width: 26px; height: 26px;
+    background: var(--border2);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: bold; color: var(--muted);
+    flex-shrink: 0;
+}
+.item-busca-wrapper { flex: 1; min-width: 0; position: relative; }
 
-input[type="number"] {
-    width: 100%;
-    min-height: 44px;
-    padding: 11px 12px;
+.item-rodape {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.item-preco {
+    font-size: 13px;
+    color: #4ade80;
+    font-weight: bold;
+    flex: 1;
+}
+
+/* controles +/- */
+.qtd-ctrl {
+    display: flex; align-items: center; gap: 0;
+    background: var(--surface);
     border: 1px solid var(--border2);
     border-radius: 8px;
-    font-size: 15px;
+    overflow: hidden;
+}
+.qtd-btn {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: none;
+    border: none;
+    color: var(--blue);
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    min-height: unset;
+    margin: 0; padding: 0; width: 36px;
+    font-family: inherit;
+}
+.qtd-btn:hover { background: var(--blue-dim); filter: none; }
+.qtd-num {
+    min-width: 34px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text);
+    background: none;
+    border: none;
     outline: none;
-    font-family: 'DM Sans', Arial, sans-serif;
-    background: var(--input-bg);
-    color: var(--input-color);
+    font-family: inherit;
+    padding: 0;
 }
-input[type="number"]:focus {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(10,132,255,0.2);
-}
+.qtd-num::-webkit-inner-spin-button,
+.qtd-num::-webkit-outer-spin-button { -webkit-appearance: none; }
 
-/* ── BUSCA CUSTOMIZADA ── */
-.busca-wrapper {
-    position: relative;
-    flex: 1;
-    min-width: 0;
+.btn-del {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: none;
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 18px;
+    cursor: pointer;
+    min-height: unset;
+    margin: 0; padding: 0;
+    font-family: inherit;
+    flex-shrink: 0;
 }
+.btn-del:hover { background: #7f1d1d; color: white; border-color: #7f1d1d; filter: none; }
+
+/* ── BUSCA ── */
 .busca-input {
     width: 100%;
-    min-height: 44px;
-    padding: 11px 12px;
+    min-height: 40px;
+    padding: 9px 12px;
     border: 1px solid var(--border2);
     border-radius: 8px;
     font-size: 14px;
@@ -138,201 +289,148 @@ input[type="number"]:focus {
     font-family: 'DM Sans', Arial, sans-serif;
     background: var(--input-bg);
     color: var(--input-color);
-    cursor: pointer;
 }
-.busca-input:focus {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(10,132,255,0.2);
-    cursor: text;
-}
+.busca-input:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(10,132,255,0.2); }
 .busca-input::placeholder { color: var(--muted); font-size: 13px; }
-.busca-input.selecionado { color: var(--text); }
 
 .busca-dropdown {
     display: none;
     position: absolute;
-    top: calc(100% + 4px);
     left: 0; right: 0;
     background: var(--dropdown-bg);
     border: 1px solid var(--blue);
-    border-radius: 8px;
-    max-height: 260px;
+    border-radius: 10px;
+    max-height: 240px;
     overflow-y: auto;
     z-index: 999;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
 }
 .busca-dropdown.aberto { display: block; }
 
 .busca-grupo-label {
-    padding: 6px 12px 3px;
-    font-size: 11px;
+    padding: 5px 12px 3px;
+    font-size: 10px;
     font-weight: bold;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     background: var(--dropdown-grupo);
-    position: sticky;
-    top: 0;
+    position: sticky; top: 0;
 }
 .busca-opcao {
-    padding: 10px 12px;
+    padding: 9px 12px;
     font-size: 13px;
     color: var(--text);
     cursor: pointer;
     border-bottom: 1px solid var(--border);
-    line-height: 1.3;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
 }
 .busca-opcao:last-child { border-bottom: none; }
-.busca-opcao:hover, .busca-opcao.ativo {
-    background: var(--blue-dim);
-    color: white;
-}
-.busca-opcao .opcao-codigo {
-    font-size: 11px;
-    color: var(--muted);
-    display: block;
-}
-.busca-opcao .opcao-preco {
-    font-size: 11px;
-    color: #4ade80;
-    float: right;
-    margin-left: 8px;
-}
-.busca-vazio {
-    padding: 14px 12px;
-    color: var(--muted);
-    font-size: 13px;
-    text-align: center;
-}
+.busca-opcao:active { background: var(--blue-dim); }
+.opcao-nome { flex: 1; line-height: 1.3; }
+.opcao-codigo-txt { font-size: 10px; color: var(--muted); display: block; }
+.opcao-preco-txt { font-size: 12px; color: #4ade80; font-weight: bold; white-space: nowrap; }
+.busca-vazio { padding: 14px 12px; color: var(--muted); font-size: 13px; text-align: center; }
 
-/* ── OPCOES PROJETO ── */
-.opcoes-projeto {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 10px;
+/* ── DIAS ── */
+.dias-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
 }
-.opcao-projeto {
-    display: flex; align-items: center; gap: 10px;
-    min-height: 46px;
-    background: var(--item-bg);
-    border: 1px solid var(--border2);
-    padding: 12px; border-radius: 8px;
-    cursor: pointer; font-weight: bold;
+.dias-item label {
+    display: block; font-size: 12px; font-weight: bold;
+    color: var(--muted); margin-bottom: 6px;
 }
-.opcao-projeto input {
-    width: 18px; height: 18px; margin: 0;
-    accent-color: var(--blue);
-}
-.opcao-projeto:has(input:checked) {
-    outline: 2px solid var(--blue);
-    border-color: var(--blue);
-    background: var(--blue-dim);
-}
-
-.secao {
-    margin-top: 20px;
-    padding-top: 18px;
-    border-top: 1px solid var(--border);
-}
-.secao-titulo { margin-top: 0; }
-
-.produtos-grid { display: grid; gap: 10px; }
-
-.produto-linha {
-    display: grid;
-    grid-template-columns: 34px minmax(0,1fr) 72px 36px;
-    gap: 10px; align-items: center;
-}
-.infra-linha {
-    display: grid;
-    grid-template-columns: minmax(0,1fr) 72px 36px;
-    gap: 10px; align-items: center;
-}
-.produtos-cabecalho { color: var(--muted); font-size: 13px; }
-.produto-numero {
-    display: flex; align-items: center; justify-content: center;
-    width: 34px; height: 34px;
-    background: var(--item-bg); border-radius: 8px;
-    color: var(--label); font-weight: bold;
-}
-.produto-qtd { text-align: center; }
-.botao-remover {
-    width: 36px; height: 36px; min-height: 36px;
-    margin: 0; padding: 0;
-    background: var(--item-bg); color: var(--muted);
-    font-size: 20px; line-height: 1;
-}
-.botao-remover:hover { background: #7f1d1d; color: white; filter: none; }
-
-.linha-total-cameras {
-    display: flex; align-items: center;
-    justify-content: space-between;
-    gap: 14px; margin-top: 14px;
+.dias-item input {
+    width: 100%; min-height: 44px;
     padding: 10px 12px;
-    background: var(--item-bg);
     border: 1px solid var(--border2);
     border-radius: 8px;
-}
-.linha-total-cameras span:first-child {
-    color: var(--label); font-size: 13px; font-weight: bold;
-}
-.campo-automatico {
-    display: flex; align-items: center; justify-content: center;
-    min-width: 58px; height: 40px;
-    background: #2a2a2a; color: white;
-    font-weight: bold; border-radius: 8px; font-size: 18px;
-}
-.campo-automatico.nivel-facil   { background: var(--ok); color: var(--text); }
-.campo-automatico.nivel-medio   { background: var(--warn); color: var(--text); }
-.campo-automatico.nivel-dificil { background: var(--danger); color: var(--text); }
-
-.linha-dupla {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 10px; margin-top: 6px;
-}
-
-button {
-    width: 100%; min-height: 44px;
-    padding: 12px; margin-top: 16px;
-    border: none; border-radius: 8px;
-    background: var(--blue); color: white;
     font-size: 16px; font-weight: bold;
-    cursor: pointer;
-    font-family: 'DM Sans', Arial, sans-serif;
+    text-align: center;
+    background: var(--input-bg);
+    color: var(--input-color);
+    outline: none;
+    font-family: inherit;
 }
-button:hover { filter: brightness(1.08); }
-.botao-adicionar { margin-top: 12px; background: #16803a; }
-.botao-pagamento { background: #f4f7fb; color: #151922; margin-top: 12px; }
-.botao-limpar { background: transparent; color: var(--muted); border: 1px solid var(--border2); margin-top: 8px; font-size: 14px; font-family: inherit; }
-.botao-limpar:hover { border-color: #ef4444; color: #ef4444; filter: none; }
+.dias-item input:focus { border-color: var(--blue); }
 
-.resultado {
-    margin-top: 18px;
-    background: var(--blue); color: white;
-    padding: 18px; border-radius: 10px;
-    font-size: 30px; font-weight: bold; line-height: 1.1;
-    box-shadow: 0 12px 24px rgba(10,132,255,0.25);
+/* ── RESULTADO ── */
+.resultado-card {
+    background: var(--blue);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 8px 20px rgba(10,132,255,0.3);
 }
-.resultado span {
-    display: block; margin-bottom: 6px;
-    color: #dceeff; font-size: 13px; font-weight: bold;
+.resultado-label { font-size: 12px; color: #dceeff; font-weight: bold; margin-bottom: 4px; }
+.resultado-valor { font-size: 34px; font-weight: bold; color: white; line-height: 1; }
+
+.resumo-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 12px; cursor: pointer;
+    font-size: 12px; color: #dceeff;
+    user-select: none;
 }
-.info { margin-top: 12px; color: var(--muted); line-height: 1.5; }
-.info-resumo { display: grid; gap: 6px; margin-top: 14px; color: var(--label); font-size: 14px; }
-.info-linha {
+.resumo-toggle .seta { transition: transform 0.2s; }
+.resumo-toggle.aberto .seta { transform: rotate(180deg); }
+
+.resumo-itens {
+    display: none;
+    margin-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 10px;
+    gap: 6px;
+    flex-direction: column;
+}
+.resumo-itens.visivel { display: flex; }
+.resumo-linha {
     display: flex; justify-content: space-between; gap: 12px;
-    border-bottom: 1px solid var(--border); padding-bottom: 6px;
+    font-size: 13px; color: #dceeff;
 }
-.info-linha:last-child { border-bottom: none; padding-bottom: 0; }
+.resumo-linha strong { color: white; }
 
-@media (max-width: 420px) {
-    body { padding: 10px; }
-    .container { padding: 14px; }
-    .produto-linha { grid-template-columns: 32px minmax(0,1fr) 62px 32px; gap: 8px; }
-    .infra-linha   { grid-template-columns: minmax(0,1fr) 62px 32px; gap: 8px; }
-    .opcoes-projeto { gap: 8px; }
+/* ── BOTÕES FIXOS ── */
+.fab-area {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 10px 12px 16px;
+    background: linear-gradient(to top, var(--bg) 60%, transparent);
+    display: flex; gap: 8px;
+    max-width: 504px;
+    margin: auto;
+    z-index: 100;
 }
+.fab {
+    flex: 1; min-height: 48px;
+    border: none; border-radius: 12px;
+    font-size: 15px; font-weight: bold;
+    cursor: pointer; font-family: inherit;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.fab-verde { background: var(--green); color: white; }
+.fab-verde:hover { filter: brightness(1.1); }
+.fab-azul { background: var(--blue); color: white; }
+.fab-azul:hover { filter: brightness(1.1); }
+.fab-ghost {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    flex: 0 0 48px;
+    font-size: 20px;
+}
+.fab-ghost:hover { border-color: #ef4444; color: #ef4444; filter: none; }
+
+/* ── SECAO ADD INFRA ── */
+.add-row {
+    display: flex; gap: 8px; margin-top: 4px;
+}
+.add-row button {
+    flex: 1; min-height: 42px; margin: 0;
+    border-radius: 8px; font-size: 14px;
+    background: var(--green); color: white;
+    border: none; font-family: inherit; font-weight: bold; cursor: pointer;
+}
+.add-row button:hover { filter: brightness(1.1); }
 
 </style>
 </head>
@@ -340,81 +438,90 @@ button:hover { filter: brightness(1.08); }
 
 <div class="container">
 
+    <!-- TOPO -->
     <div class="topo">
         <div>
-            <h2>Orçamento rápido</h2>
+            <h2>Orçamento</h2>
             <p class="subtitulo">CPZ Digital</p>
         </div>
         <img class="logo-empresa" src="cpz-logo.png" alt="CPZ Digital">
     </div>
 
-    <label>Tipo do Projeto</label>
-    <div class="opcoes-projeto">
-        <label class="opcao-projeto">
-            <input type="checkbox" name="tipo" value="analogica" checked> Analógica
-        </label>
-        <label class="opcao-projeto">
-            <input type="checkbox" name="tipo" value="ip"> IP
-        </label>
-        <label class="opcao-projeto">
-            <input type="checkbox" name="tipo" value="wifi"> Wi-Fi
-        </label>
-        <label class="opcao-projeto">
-            <input type="checkbox" name="tipo" value="automacao"> Automação
-        </label>
-        <label class="opcao-projeto">
-            <input type="checkbox" name="tipo" value="sensores"> Sensores
-        </label>
-        <label class="opcao-projeto">
+    <!-- TIPO -->
+    <div class="card">
+        <div class="card-titulo">Tipo do projeto</div>
+        <div class="tipos-grid" id="tiposGrid">
+            <label class="tipo-btn ativo"><input type="checkbox" name="tipo" value="analogica" checked>Analógica</label>
+            <label class="tipo-btn"><input type="checkbox" name="tipo" value="ip">IP</label>
+            <label class="tipo-btn"><input type="checkbox" name="tipo" value="wifi">Wi-Fi</label>
+            <label class="tipo-btn"><input type="checkbox" name="tipo" value="automacao">Automação</label>
+            <label class="tipo-btn"><input type="checkbox" name="tipo" value="sensores">Sensores</label>
+        </div>
+        <label class="apoio-btn" id="apoioBtn">
             <input type="checkbox" id="usarSocio"> Apoio técnico
         </label>
-    </div>
 
-    <div class="linha-total-cameras">
-        <span>Total de câmeras</span>
-        <span id="totalCameras" class="campo-automatico">0</span>
+        <div class="cameras-row" style="margin-top:10px; margin-bottom:0;">
+            <span class="cameras-label">Total de câmeras</span>
+            <span class="cameras-badge" id="totalCameras">0</span>
+        </div>
     </div>
 
     <!-- PRODUTOS -->
-    <div class="secao">
-        <label class="secao-titulo">Itens do projeto</label>
-        <div class="produto-linha produtos-cabecalho">
-            <span>Nº</span><span>Produto</span><span>Qtd.</span><span></span>
+    <div class="card">
+        <div class="card-titulo">Itens do projeto</div>
+        <div id="listaProdutos"></div>
+        <div class="add-row">
+            <button onclick="adicionarProduto()">+ Produto</button>
         </div>
-        <div class="produtos-grid" id="listaProdutos"></div>
-        <button type="button" class="botao-adicionar" onclick="adicionarProduto()">+ Adicionar item</button>
     </div>
 
     <!-- INFRAESTRUTURA -->
-    <div class="secao">
-        <label class="secao-titulo">Infraestrutura</label>
-        <div class="infra-linha produtos-cabecalho">
-            <span>Item</span><span>Qtd.</span><span></span>
-        </div>
-        <div class="produtos-grid" id="listaInfra"></div>
-        <button type="button" class="botao-adicionar" onclick="adicionarInfra()">+ Adicionar item</button>
-    </div>
-
-    <div class="linha-dupla">
-        <div>
-            <label>Dias de trabalho</label>
-            <input type="number" id="diasTrabalho" min="0" value="1">
-        </div>
-        <div>
-            <label>Dias com diarista</label>
-            <input type="number" id="diasDiarista" min="0" value="1">
+    <div class="card">
+        <div class="card-titulo">Infraestrutura</div>
+        <div id="listaInfra"></div>
+        <div class="add-row">
+            <button onclick="adicionarInfra()">+ Infraestrutura</button>
         </div>
     </div>
 
-    <div class="resultado" id="resultado">
-        <span>Valor final do projeto</span>R$ 0,00
+    <!-- DIAS -->
+    <div class="card">
+        <div class="card-titulo">Serviço</div>
+        <div class="dias-grid">
+            <div class="dias-item">
+                <label>Dias de trabalho</label>
+                <input type="number" id="diasTrabalho" min="0" value="1">
+            </div>
+            <div class="dias-item">
+                <label>Dias com diarista</label>
+                <input type="number" id="diasDiarista" min="0" value="1">
+            </div>
+        </div>
     </div>
 
-    <div class="info" id="info"></div>
+    <!-- RESULTADO -->
+    <div class="resultado-card">
+        <div class="resultado-label">Valor final do projeto</div>
+        <div class="resultado-valor" id="resultadoValor">R$ 0,00</div>
 
-    <button type="button" class="botao-pagamento" onclick="abrirPagamentos()">Ver formas de pagamento</button>
-    <button type="button" class="botao-limpar" onclick="limparOrcamento()">🗑 Novo orçamento</button>
+        <div class="resumo-toggle" id="resumoToggle" onclick="toggleResumo()">
+            <span>Ver detalhes</span>
+            <span class="seta">▼</span>
+        </div>
+        <div class="resumo-itens" id="resumoItens">
+            <div class="resumo-linha"><span>Equipamentos</span><strong id="rEquip">R$ 0,00</strong></div>
+            <div class="resumo-linha"><span>Infraestrutura</span><strong id="rInfra">R$ 0,00</strong></div>
+            <div class="resumo-linha"><span>Serviço e despesas</span><strong id="rServico">R$ 0,00</strong></div>
+        </div>
+    </div>
 
+</div>
+
+<!-- BOTÕES FIXOS -->
+<div class="fab-area">
+    <button class="fab fab-azul" onclick="abrirPagamentos()">💳 Pagamento</button>
+    <button class="fab fab-ghost" onclick="limparOrcamento()" title="Novo orçamento">🗑</button>
 </div>
 
 <script>
@@ -430,547 +537,432 @@ const ordemCategorias = [
     "Infraestrutura","Rede","Energia","Automação","Acessórios"
 ];
 
-function formatarMoeda(v) {
-    return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
+const fmt = v => v.toLocaleString("pt-BR", { style:"currency", currency:"BRL" });
 
 function simplificarNome(nome) {
-    return nome.trim().replace(/\s+/g, " ")
-        .replace(/CAMERA/gi, "Câmera").replace(/ANALOGICA/gi, "analógica")
-        .replace(/BRANCA/gi, "branca").replace(/PRETA/gi, "preta")
-        .replace(/CAIXA DE PASSAGEM/gi, "caixa de passagem")
-        .replace(/CONVERSOR AUTOMATICO/gi, "Conversor automático")
-        .replace(/PROTETOR ELETRONICO/gi, "Protetor eletrônico")
-        .replace(/SWITCH NAO GERENCIAVEL/gi, "Switch não gerenciável")
-        .replace(/INTERRUPTOR/gi, "Interruptor").replace(/CARTAO/gi, "Cartão")
-        .replace(/CABO/gi, "Cabo").replace(/MINI RACK/gi, "Mini rack")
-        .replace(/NOBREAK/gi, "Nobreak").replace(/CANAIS/gi, "canais")
-        .replace(/PORTAS/gi, "portas").replace(/TOMADAS/gi, "tomadas")
-        .replace(/PACOTE COM/gi, "pacote com").replace(/UNIDADES/gi, "unidades")
-        .replace(/BORNE DE PARAFUSO/gi, "borne de parafuso")
-        .replace(/ALIMENTACAO/gi, "alimentação").replace(/ALIMENTAÇÃO/gi, "alimentação")
-        .replace(/p\/SEGURANCA ELETRONICA/gi, "para segurança eletrônica")
-        .replace(/SEGURANCA ELETRONICA/gi, "segurança eletrônica")
-        .replace(/P\/RACK/gi, "para rack").replace(/S\/FIO/gi, "sem fio")
-        .replace(/s\/HD/g, "sem HD").replace(/c\/HD/g, "com HD")
-        .replace(/c\/MICROSD/gi, "com MicroSD").replace(/\s*-\s*/g, " - ");
+    return nome.trim().replace(/\s+/g," ")
+        .replace(/CAMERA/gi,"Câmera").replace(/ANALOGICA/gi,"analógica")
+        .replace(/BRANCA/gi,"branca").replace(/PRETA/gi,"preta")
+        .replace(/CAIXA DE PASSAGEM/gi,"caixa de passagem")
+        .replace(/CONVERSOR AUTOMATICO/gi,"Conversor automático")
+        .replace(/PROTETOR ELETRONICO/gi,"Protetor eletrônico")
+        .replace(/SWITCH NAO GERENCIAVEL/gi,"Switch não gerenciável")
+        .replace(/INTERRUPTOR/gi,"Interruptor").replace(/CARTAO/gi,"Cartão")
+        .replace(/CABO/gi,"Cabo").replace(/MINI RACK/gi,"Mini rack")
+        .replace(/NOBREAK/gi,"Nobreak").replace(/CANAIS/gi,"canais")
+        .replace(/PORTAS/gi,"portas").replace(/TOMADAS/gi,"tomadas")
+        .replace(/PACOTE COM/gi,"pacote com").replace(/UNIDADES/gi,"unidades")
+        .replace(/BORNE DE PARAFUSO/gi,"borne de parafuso")
+        .replace(/ALIMENTACAO/gi,"alimentação").replace(/ALIMENTAÇÃO/gi,"alimentação")
+        .replace(/p\/SEGURANCA ELETRONICA/gi,"para segurança eletrônica")
+        .replace(/SEGURANCA ELETRONICA/gi,"segurança eletrônica")
+        .replace(/P\/RACK/gi,"para rack").replace(/S\/FIO/gi,"sem fio")
+        .replace(/s\/HD/g,"sem HD").replace(/c\/HD/g,"com HD")
+        .replace(/c\/MICROSD/gi,"com MicroSD").replace(/\s*-\s*/g," - ");
 }
 
 function categoriaProduto(codigo) {
     if (codigo.startsWith("CAM-"))                              return "Câmeras";
-    if (codigo.startsWith("DVR") || codigo.startsWith("NVR"))  return "Gravadores";
+    if (codigo.startsWith("DVR")||codigo.startsWith("NVR"))     return "Gravadores";
     if (codigo.startsWith("ARM-"))                             return "Armazenamento";
     if (codigo.startsWith("CAB-"))                             return "Cabos";
     if (codigo.startsWith("INF-"))                             return "Infraestrutura";
-    if (codigo.startsWith("SW")  || codigo.startsWith("RED-")) return "Rede";
+    if (codigo.startsWith("SW")||codigo.startsWith("RED-"))    return "Rede";
     if (codigo.startsWith("ENG-"))                             return "Energia";
     if (codigo.startsWith("AUT-"))                             return "Automação";
     return "Acessórios";
 }
 
-function pegarValorProduto(codigo) {
-    const p = produtos.find(i => i.codigo === codigo);
-    return p ? p.valor : 0;
-}
-
-function pegarValorInfra(nome) {
-    const p = itensInfra.find(i => i.nome === nome);
-    return p ? p.valor : 0;
-}
-
-// ── PARSER CSV ──
 function parseCsv(texto, temCodigo) {
     const linhas = texto.trim().split(/\r?\n/);
     if (linhas.length < 2) return [];
     const sep = linhas[0].includes(";") ? ";" : ",";
-    const resultado = [];
+    const res = [];
     for (let i = 1; i < linhas.length; i++) {
-        const linha = linhas[i].trim();
-        if (!linha) continue;
-        const campos = [];
-        let atual = "", dentroAspas = false;
+        const linha = linhas[i].trim(); if (!linha) continue;
+        const campos = []; let atual = "", q = false;
         for (let c = 0; c < linha.length; c++) {
-            if (linha[c] === '"') { dentroAspas = !dentroAspas; }
-            else if (linha[c] === sep && !dentroAspas) { campos.push(atual.trim()); atual = ""; }
-            else { atual += linha[c]; }
+            if (linha[c]==='"') q=!q;
+            else if (linha[c]===sep && !q) { campos.push(atual.trim()); atual=""; }
+            else atual+=linha[c];
         }
         campos.push(atual.trim());
         if (temCodigo) {
-            if (campos.length < 3) continue;
-            const codigo = campos[0].replace(/^"|"$/g, "").trim();
-            const nome   = campos[1].replace(/^"|"$/g, "").trim();
-            const valor  = parseFloat(campos[2].replace(/^"|"$/g, "").replace(",", ".").trim());
-            if (!codigo || !nome || isNaN(valor)) continue;
-            resultado.push({ codigo, nome: simplificarNome(nome), valor });
+            if (campos.length<3) continue;
+            const codigo=campos[0].replace(/^"|"$/g,"").trim();
+            const nome=campos[1].replace(/^"|"$/g,"").trim();
+            const valor=parseFloat(campos[2].replace(/^"|"$/g,"").replace(",",".").trim());
+            if (!codigo||!nome||isNaN(valor)) continue;
+            res.push({codigo, nome:simplificarNome(nome), valor});
         } else {
-            if (campos.length < 5) continue;
-            const nome  = campos[1].replace(/^"|"$/g, "").trim();
-            const valor = parseFloat(campos[4].replace(/^"|"$/g, "").replace(",", ".").replace(/[^\d.]/g, "").trim());
-            if (!nome || isNaN(valor)) continue;
-            resultado.push({ nome: simplificarNome(nome), valor });
+            if (campos.length<5) continue;
+            const nome=campos[1].replace(/^"|"$/g,"").trim();
+            const valor=parseFloat(campos[4].replace(/^"|"$/g,"").replace(",",".").replace(/[^\d.]/g,"").trim());
+            if (!nome||isNaN(valor)) continue;
+            res.push({nome:simplificarNome(nome), valor});
         }
     }
-    return resultado;
+    return res;
 }
 
-// ── CARREGAR BANCO ──
 async function carregarBanco() {
     try {
-        const rProd = await fetch(URL_PRODUTOS);
-        if (rProd.ok) {
-            const lista = parseCsv(await rProd.text(), true);
-            if (lista.length > 0) produtos = lista;
-        }
-    } catch(e) { console.error("Erro produtos:", e.message); }
-
+        const r = await fetch(URL_PRODUTOS);
+        if (r.ok) { const l=parseCsv(await r.text(),true); if(l.length) produtos=l; }
+    } catch(e) { console.error("Produtos:",e.message); }
     try {
-        const rInfra = await fetch(URL_INFRA);
-        if (rInfra.ok) {
-            const lista = parseCsv(await rInfra.text(), false);
-            if (lista.length > 0) itensInfra = lista;
-        }
-    } catch(e) { console.error("Erro infra:", e.message); }
+        const r = await fetch(URL_INFRA);
+        if (r.ok) { const l=parseCsv(await r.text(),false); if(l.length) itensInfra=l; }
+    } catch(e) { console.error("Infra:",e.message); }
 }
 
-// ══════════════════════════════════════════════
-// COMPONENTE DE BUSCA CUSTOMIZADO
-// ══════════════════════════════════════════════
-
-function criarBusca(opcoes, placeholder, valorInicial, onSelect) {
-    // opcoes: [{valor, label, sublabel, grupo}]
-    let valorAtual = valorInicial || "";
-    let dropAberto = false;
-    let idxAtivo   = -1;
-    let opcoesVisiveis = [];
-
-    const wrapper  = document.createElement("div");
-    wrapper.className = "busca-wrapper";
+// ── COMPONENTE DE BUSCA ──
+function criarBusca(listaOpcoes, placeholder, valorInicial, onSelect) {
+    let opcoes = listaOpcoes;
+    const wrapper = document.createElement("div");
+    wrapper.className = "item-busca-wrapper";
 
     const input = document.createElement("input");
-    input.type = "text";
-    input.className = "busca-input";
-    input.placeholder = placeholder;
-    input.autocomplete = "off";
+    input.type="text"; input.className="busca-input";
+    input.placeholder=placeholder; input.autocomplete="off";
+    input.setAttribute("inputmode","search");
 
     const dropdown = document.createElement("div");
-    dropdown.className = "busca-dropdown";
+    dropdown.className="busca-dropdown";
 
     wrapper.appendChild(input);
     wrapper.appendChild(dropdown);
 
-    // Preenche com o valor inicial
     if (valorInicial) {
-        const opt = opcoes.find(o => o.valor === valorInicial);
-        if (opt) { input.value = opt.label; input.dataset.valor = opt.valor; }
+        const opt = opcoes.find(o=>o.valor===valorInicial);
+        if (opt) { input.value=opt.label; input.dataset.valor=opt.valor; }
     }
 
     function renderDropdown(filtro) {
-        dropdown.innerHTML = "";
-        opcoesVisiveis = [];
-        idxAtivo = -1;
-
-        const termo = filtro.toLowerCase();
-        let grupoAtual = null;
-
+        dropdown.innerHTML="";
+        const termo=filtro.toLowerCase();
+        let grupoAtual=null;
+        let count=0;
         opcoes.forEach(opt => {
-            const match = !termo ||
-                opt.label.toLowerCase().includes(termo) ||
-                (opt.sublabel || "").toLowerCase().includes(termo) ||
-                (opt.grupo || "").toLowerCase().includes(termo);
+            const match=!termo||opt.label.toLowerCase().includes(termo)||(opt.sublabel||"").toLowerCase().includes(termo)||(opt.grupo||"").toLowerCase().includes(termo);
             if (!match) return;
-
-            if (opt.grupo && opt.grupo !== grupoAtual) {
-                grupoAtual = opt.grupo;
-                const g = document.createElement("div");
-                g.className = "busca-grupo-label";
-                g.textContent = opt.grupo;
+            if (opt.grupo && opt.grupo!==grupoAtual) {
+                grupoAtual=opt.grupo;
+                const g=document.createElement("div");
+                g.className="busca-grupo-label"; g.textContent=opt.grupo;
                 dropdown.appendChild(g);
             }
-
-            const el = document.createElement("div");
-            el.className = "busca-opcao";
-            el.innerHTML = `
-                <span class="opcao-preco">${opt.preco || ""}</span>
-                ${opt.sublabel ? `<span class="opcao-codigo">${opt.sublabel}</span>` : ""}
-                ${opt.label}
-            `;
-            el.addEventListener("mousedown", (e) => {
-                e.preventDefault();
-                selecionar(opt);
-            });
+            const el=document.createElement("div");
+            el.className="busca-opcao";
+            el.innerHTML=`<div class="opcao-nome">${opt.sublabel?`<span class="opcao-codigo-txt">${opt.sublabel}</span>`:""}<span>${opt.label}</span></div><span class="opcao-preco-txt">${opt.preco||""}</span>`;
+            el.addEventListener("touchstart",e=>{e.preventDefault();selecionar(opt);},{passive:false});
+            el.addEventListener("mousedown",e=>{e.preventDefault();selecionar(opt);});
             dropdown.appendChild(el);
-            opcoesVisiveis.push({ el, opt });
+            count++;
         });
-
-        if (opcoesVisiveis.length === 0) {
-            const vazio = document.createElement("div");
-            vazio.className = "busca-vazio";
-            vazio.textContent = termo ? "Nenhum item encontrado" : "Nenhum item disponível";
-            dropdown.appendChild(vazio);
+        if (!count) {
+            const v=document.createElement("div");
+            v.className="busca-vazio";
+            v.textContent=termo?"Nenhum item encontrado":"Nenhum item disponível";
+            dropdown.appendChild(v);
         }
     }
 
     function abrirDropdown() {
-        renderDropdown(input.value === opcoes.find(o => o.valor === input.dataset.valor)?.label ? "" : input.value);
-        // Abre pra cima se o campo estiver no terço inferior da tela
-        const rect = input.getBoundingClientRect();
-        const espacoAbaixo = window.innerHeight - rect.bottom;
-        if (espacoAbaixo < 280) {
-            dropdown.style.top = "auto";
-            dropdown.style.bottom = "calc(100% + 4px)";
-        } else {
-            dropdown.style.top = "calc(100% + 4px)";
-            dropdown.style.bottom = "auto";
-        }
+        renderDropdown(input.dataset.valor ? "" : input.value);
+        const rect=input.getBoundingClientRect();
+        const espacoAbaixo=window.innerHeight-rect.bottom;
+        if (espacoAbaixo<280) { dropdown.style.top="auto"; dropdown.style.bottom="calc(100% + 4px)"; }
+        else { dropdown.style.top="calc(100% + 4px)"; dropdown.style.bottom="auto"; }
         dropdown.classList.add("aberto");
-        dropAberto = true;
     }
 
     function fecharDropdown() {
         dropdown.classList.remove("aberto");
-        dropAberto = false;
-        // Restaura o label do item selecionado se o campo estiver vazio ou diferente
         if (input.dataset.valor) {
-            const opt = opcoes.find(o => o.valor === input.dataset.valor);
-            if (opt) input.value = opt.label;
-        } else {
-            input.value = "";
-        }
+            const opt=opcoes.find(o=>o.valor===input.dataset.valor);
+            if (opt) input.value=opt.label;
+        } else { input.value=""; }
     }
 
     function selecionar(opt) {
-        valorAtual = opt.valor;
-        input.value = opt.label;
-        input.dataset.valor = opt.valor;
-        input.blur(); // fecha teclado no mobile
-        fecharDropdown();
-        onSelect(opt.valor);
+        input.value=opt.label; input.dataset.valor=opt.valor;
+        input.blur(); fecharDropdown(); onSelect(opt.valor);
     }
 
-    input.addEventListener("focus", () => {
-        input.select();
-        abrirDropdown();
-    });
+    input.addEventListener("focus",()=>{ input.select(); abrirDropdown(); });
+    input.addEventListener("input",()=>{ input.dataset.valor=""; abrirDropdown(); renderDropdown(input.value); onSelect(""); });
+    input.addEventListener("blur",()=>{ setTimeout(fecharDropdown,200); });
 
-    input.addEventListener("input", () => {
-        input.dataset.valor = "";
-        valorAtual = "";
-        abrirDropdown();
-        renderDropdown(input.value);
-        onSelect("");
-    });
-
-    input.addEventListener("blur", () => {
-        setTimeout(fecharDropdown, 150);
-    });
-
-    input.addEventListener("keydown", (e) => {
-        if (!dropAberto) return;
-        if (e.key === "ArrowDown") {
-            e.preventDefault();
-            idxAtivo = Math.min(idxAtivo + 1, opcoesVisiveis.length - 1);
-            atualizarAtivo();
-        } else if (e.key === "ArrowUp") {
-            e.preventDefault();
-            idxAtivo = Math.max(idxAtivo - 1, 0);
-            atualizarAtivo();
-        } else if (e.key === "Enter") {
-            e.preventDefault();
-            if (idxAtivo >= 0 && opcoesVisiveis[idxAtivo]) {
-                selecionar(opcoesVisiveis[idxAtivo].opt);
-            }
-        } else if (e.key === "Escape") {
-            fecharDropdown();
-        }
-    });
-
-    function atualizarAtivo() {
-        opcoesVisiveis.forEach((o, i) => {
-            o.el.classList.toggle("ativo", i === idxAtivo);
-            if (i === idxAtivo) o.el.scrollIntoView({ block: "nearest" });
-        });
-    }
-
-    // Expõe o valor atual para leitura externa
-    wrapper.getValor = () => input.dataset.valor || "";
-    wrapper.setOpcoes = (novasOpcoes) => {
-        opcoes = novasOpcoes;
-        if (valorInicial) {
-            const opt = opcoes.find(o => o.valor === valorInicial);
-            if (opt) { input.value = opt.label; input.dataset.valor = opt.valor; }
-        }
-    };
-
+    wrapper.getValor=()=>input.dataset.valor||"";
+    wrapper.setOpcoes=(novas)=>{ opcoes=novas; if(valorInicial){const o=opcoes.find(x=>x.valor===valorInicial);if(o){input.value=o.label;input.dataset.valor=o.valor;}} };
     return wrapper;
 }
 
-// ── Converter produtos/infra para formato do componente de busca ──
 function opcoesParaProdutos() {
-    const resultado = [];
-    ordemCategorias.forEach(cat => {
-        produtos.filter(p => categoriaProduto(p.codigo) === cat).forEach(p => {
-            resultado.push({
-                valor: p.codigo,
-                label: p.nome,
-                sublabel: p.codigo,
-                grupo: cat,
-                preco: formatarMoeda(p.valor)
-            });
+    const res=[];
+    ordemCategorias.forEach(cat=>{
+        produtos.filter(p=>categoriaProduto(p.codigo)===cat).forEach(p=>{
+            res.push({valor:p.codigo,label:p.nome,sublabel:p.codigo,grupo:cat,preco:fmt(p.valor)});
         });
     });
-    return resultado;
+    return res;
 }
 
 function opcoesParaInfra() {
-    return itensInfra.map(i => ({
-        valor: i.nome,
-        label: i.nome,
-        sublabel: "",
-        grupo: "",
-        preco: formatarMoeda(i.valor)
-    }));
+    return itensInfra.map(i=>({valor:i.nome,label:i.nome,sublabel:"",grupo:"",preco:fmt(i.valor)}));
 }
 
 // ── ADICIONAR PRODUTO ──
-let contadorProd = 0;
+let contadorProd=0;
 
 function adicionarProduto(codigo, quantidade) {
     contadorProd++;
-    const lista = document.getElementById("listaProdutos");
-    const linha = document.createElement("div");
-    linha.className = "produto-linha item-produto";
+    const lista=document.getElementById("listaProdutos");
+    const card=document.createElement("div");
+    card.className="item-card item-produto";
 
-    const numero = document.createElement("div");
-    numero.className = "produto-numero";
-    numero.textContent = contadorProd;
+    const topo=document.createElement("div"); topo.className="item-topo";
+    const numero=document.createElement("div"); numero.className="item-numero"; numero.textContent=contadorProd;
+    const busca=criarBusca(opcoesParaProdutos(),"Buscar produto...",codigo||"",()=>atualizarPrecoItem(card,true));
+    topo.appendChild(numero); topo.appendChild(busca);
 
-    const busca = criarBusca(
-        opcoesParaProdutos(),
-        "Buscar produto...",
-        codigo || "",
-        () => calcular()
-    );
+    const rodape=document.createElement("div"); rodape.className="item-rodape";
+    const preco=document.createElement("div"); preco.className="item-preco"; preco.textContent="—";
 
-    const qtd = document.createElement("input");
-    qtd.type = "number"; qtd.className = "produto-qtd";
-    qtd.min = "0"; qtd.value = quantidade || 0;
+    const ctrl=document.createElement("div"); ctrl.className="qtd-ctrl";
+    const btnMenos=document.createElement("button"); btnMenos.className="qtd-btn"; btnMenos.textContent="−"; btnMenos.type="button";
+    const qtdInput=document.createElement("input"); qtdInput.type="number"; qtdInput.className="qtd-num"; qtdInput.min="0"; qtdInput.value=quantidade||0;
+    const btnMais=document.createElement("button"); btnMais.className="qtd-btn"; btnMais.textContent="+"; btnMais.type="button";
+    ctrl.appendChild(btnMenos); ctrl.appendChild(qtdInput); ctrl.appendChild(btnMais);
 
-    const remover = document.createElement("button");
-    remover.type = "button"; remover.className = "botao-remover";
-    remover.innerHTML = "×";
+    const btnDel=document.createElement("button"); btnDel.className="btn-del"; btnDel.innerHTML="🗑"; btnDel.type="button";
 
-    qtd.addEventListener("input", calcular);
-    remover.addEventListener("click", () => { linha.remove(); renumerarProd(); calcular(); });
+    rodape.appendChild(preco); rodape.appendChild(ctrl); rodape.appendChild(btnDel);
+    card.appendChild(topo); card.appendChild(rodape);
+    lista.prepend(card); // adiciona no topo
 
-    linha.appendChild(numero);
-    linha.appendChild(busca);
-    linha.appendChild(qtd);
-    linha.appendChild(remover);
-    lista.appendChild(linha);
+    btnMais.addEventListener("click",()=>{ qtdInput.value=Math.max(0,Number(qtdInput.value)||0)+1; atualizarPrecoItem(card,true); });
+    btnMenos.addEventListener("click",()=>{ qtdInput.value=Math.max(0,(Number(qtdInput.value)||0)-1); atualizarPrecoItem(card,true); });
+    qtdInput.addEventListener("input",()=>atualizarPrecoItem(card,true));
+    qtdInput.addEventListener("focus",()=>{ if(qtdInput.value==="0") qtdInput.value=""; });
+    qtdInput.addEventListener("blur",()=>{ if(qtdInput.value==="") { qtdInput.value="0"; calcular(); } });
+    btnDel.addEventListener("click",()=>{ card.remove(); renumerarProd(); calcular(); });
+
     renumerarProd();
-    calcular();
+    atualizarPrecoItem(card,true);
+}
+
+function atualizarPrecoItem(card, recalcular) {
+    const busca=card.querySelector(".item-busca-wrapper");
+    const qtd=Number(card.querySelector(".qtd-num").value)||0;
+    const preco=card.querySelector(".item-preco");
+    const codigo=busca?busca.getValor():"";
+    const p=produtos.find(x=>x.codigo===codigo);
+    if (p && qtd>0) preco.textContent=fmt(p.valor*qtd);
+    else if (p) preco.textContent=fmt(p.valor)+" / un.";
+    else preco.textContent="—";
+    if (recalcular) calcular();
 }
 
 function renumerarProd() {
-    document.querySelectorAll(".item-produto .produto-numero").forEach((n, i) => {
-        n.textContent = i + 1;
-    });
+    // lista está invertida (prepend), então numeramos de baixo pra cima
+    const itens=[...document.querySelectorAll(".item-produto")];
+    itens.reverse().forEach((n,i)=>{ n.querySelector(".item-numero").textContent=i+1; });
 }
 
 // ── ADICIONAR INFRA ──
 function adicionarInfra(nome, quantidade) {
-    const lista = document.getElementById("listaInfra");
-    const linha = document.createElement("div");
-    linha.className = "infra-linha item-infra";
+    const lista=document.getElementById("listaInfra");
+    const card=document.createElement("div");
+    card.className="item-card item-infra";
 
-    const busca = criarBusca(
-        opcoesParaInfra(),
-        "Buscar item de infra...",
-        nome || "",
-        () => calcular()
-    );
+    const topo=document.createElement("div"); topo.className="item-topo";
+    const busca=criarBusca(opcoesParaInfra(),"Buscar item...",nome||"",()=>atualizarPrecoInfra(card,true));
+    topo.appendChild(busca);
 
-    const qtd = document.createElement("input");
-    qtd.type = "number"; qtd.className = "produto-qtd";
-    qtd.min = "0"; qtd.value = quantidade || 0;
+    const rodape=document.createElement("div"); rodape.className="item-rodape";
+    const preco=document.createElement("div"); preco.className="item-preco"; preco.textContent="—";
 
-    const remover = document.createElement("button");
-    remover.type = "button"; remover.className = "botao-remover";
-    remover.innerHTML = "×";
+    const ctrl=document.createElement("div"); ctrl.className="qtd-ctrl";
+    const btnMenos=document.createElement("button"); btnMenos.className="qtd-btn"; btnMenos.textContent="−"; btnMenos.type="button";
+    const qtdInput=document.createElement("input"); qtdInput.type="number"; qtdInput.className="qtd-num"; qtdInput.min="0"; qtdInput.value=quantidade||0;
+    const btnMais=document.createElement("button"); btnMais.className="qtd-btn"; btnMais.textContent="+"; btnMais.type="button";
+    ctrl.appendChild(btnMenos); ctrl.appendChild(qtdInput); ctrl.appendChild(btnMais);
 
-    qtd.addEventListener("input", calcular);
-    remover.addEventListener("click", () => { linha.remove(); calcular(); });
+    const btnDel=document.createElement("button"); btnDel.className="btn-del"; btnDel.innerHTML="🗑"; btnDel.type="button";
 
-    linha.appendChild(busca);
-    linha.appendChild(qtd);
-    linha.appendChild(remover);
-    lista.appendChild(linha);
-    calcular();
+    rodape.appendChild(preco); rodape.appendChild(ctrl); rodape.appendChild(btnDel);
+    card.appendChild(topo); card.appendChild(rodape);
+    lista.prepend(card);
+
+    btnMais.addEventListener("click",()=>{ qtdInput.value=Math.max(0,Number(qtdInput.value)||0)+1; atualizarPrecoInfra(card,true); });
+    btnMenos.addEventListener("click",()=>{ qtdInput.value=Math.max(0,(Number(qtdInput.value)||0)-1); atualizarPrecoInfra(card,true); });
+    qtdInput.addEventListener("input",()=>atualizarPrecoInfra(card,true));
+    qtdInput.addEventListener("focus",()=>{ if(qtdInput.value==="0") qtdInput.value=""; });
+    qtdInput.addEventListener("blur",()=>{ if(qtdInput.value==="") { qtdInput.value="0"; calcular(); } });
+    btnDel.addEventListener("click",()=>{ card.remove(); calcular(); });
+
+    atualizarPrecoInfra(card,true);
+}
+
+function atualizarPrecoInfra(card, recalcular) {
+    const busca=card.querySelector(".item-busca-wrapper");
+    const qtd=Number(card.querySelector(".qtd-num").value)||0;
+    const preco=card.querySelector(".item-preco");
+    const nome=busca?busca.getValor():"";
+    const p=itensInfra.find(x=>x.nome===nome);
+    if (p && qtd>0) preco.textContent=fmt(p.valor*qtd);
+    else if (p) preco.textContent=fmt(p.valor)+" / un.";
+    else preco.textContent="—";
+    if (recalcular) calcular();
 }
 
 // ── CÁLCULO ──
 function calcular() {
-    const tipoEl = document.querySelector('input[name="tipo"]:checked');
-    const tipo = tipoEl ? tipoEl.value : "analogica";
-    const usarSocio = document.getElementById("usarSocio").checked;
+    const tipoEl=document.querySelector('input[name="tipo"]:checked');
+    const tipo=tipoEl?tipoEl.value:"analogica";
+    const usarSocio=document.getElementById("usarSocio").checked;
 
-    let qtdCameras = 0, totalProdutos = 0;
-    document.querySelectorAll(".item-produto").forEach(linha => {
-        const busca = linha.querySelector(".busca-wrapper");
-        const codigo = busca ? busca.getValor() : "";
-        const qtd = Number(linha.querySelector(".produto-qtd").value) || 0;
-        if (codigo.startsWith("CAM-")) qtdCameras += qtd;
-        totalProdutos += pegarValorProduto(codigo) * qtd;
+    let qtdCameras=0, totalProd=0;
+    document.querySelectorAll(".item-produto").forEach(card=>{
+        const busca=card.querySelector(".item-busca-wrapper");
+        const codigo=busca?busca.getValor():"";
+        const qtd=Number(card.querySelector(".qtd-num").value)||0;
+        if (codigo.startsWith("CAM-")) qtdCameras+=qtd;
+        const p=produtos.find(x=>x.codigo===codigo);
+        if (p) totalProd+=p.valor*qtd;
     });
 
-    let totalInfra = 0;
-    document.querySelectorAll(".item-infra").forEach(linha => {
-        const busca = linha.querySelector(".busca-wrapper");
-        const nome = busca ? busca.getValor() : "";
-        const qtd = Number(linha.querySelector(".produto-qtd").value) || 0;
-        totalInfra += pegarValorInfra(nome) * qtd;
+    let totalInfra=0;
+    document.querySelectorAll(".item-infra").forEach(card=>{
+        const busca=card.querySelector(".item-busca-wrapper");
+        const nome=busca?busca.getValor():"";
+        const qtd=Number(card.querySelector(".qtd-num").value)||0;
+        const p=itensInfra.find(x=>x.nome===nome);
+        if (p) totalInfra+=p.valor*qtd;
     });
 
-    document.getElementById("totalCameras").textContent = qtdCameras;
-    let nivel = qtdCameras >= 33 ? "dificil" : qtdCameras >= 9 ? "medio" : qtdCameras >= 1 ? "facil" : "";
-    document.getElementById("totalCameras").className = "campo-automatico" + (nivel ? " nivel-" + nivel : "");
+    const cam=document.getElementById("totalCameras");
+    cam.textContent=qtdCameras;
+    let nivel=qtdCameras>=33?"dificil":qtdCameras>=9?"medio":qtdCameras>=1?"facil":"";
+    cam.className="cameras-badge"+(nivel?" "+nivel:"");
 
-    const tabelaSolo = {
-        analogica: { facil:1.6, medio:1.7, dificil:1.7 },
-        ip:        { facil:1.7, medio:1.9, dificil:2.0 },
-        wifi:      { facil:2.0, medio:2.1, dificil:2.2 },
-        automacao: { facil:2.2, medio:2.4, dificil:2.7 },
-        sensores:  { facil:2.0, medio:2.2, dificil:2.3 },
-    };
-    const tabelaSocio = {
-        analogica: { facil:2.1, medio:2.2, dificil:2.2 },
-        ip:        { facil:2.3, medio:2.4, dificil:2.6 },
-        wifi:      { facil:2.6, medio:2.7, dificil:2.8 },
-        automacao: { facil:3.0, medio:3.2, dificil:3.5 },
-        sensores:  { facil:2.8, medio:3.0, dificil:3.2 },
-    };
-    const tabela = usarSocio ? tabelaSocio : tabelaSolo;
-    const nivelCalc = nivel || "facil";
-    const mult = (tabela[tipo] || tabela.analogica)[nivelCalc];
+    const tS={analogica:{facil:1.6,medio:1.7,dificil:1.7},ip:{facil:1.7,medio:1.9,dificil:2.0},wifi:{facil:2.0,medio:2.1,dificil:2.2},automacao:{facil:2.2,medio:2.4,dificil:2.7},sensores:{facil:2.0,medio:2.2,dificil:2.3}};
+    const tSo={analogica:{facil:2.1,medio:2.2,dificil:2.2},ip:{facil:2.3,medio:2.4,dificil:2.6},wifi:{facil:2.6,medio:2.7,dificil:2.8},automacao:{facil:3.0,medio:3.2,dificil:3.5},sensores:{facil:2.8,medio:3.0,dificil:3.2}};
+    const tab=usarSocio?tSo:tS;
+    const mult=(tab[tipo]||tab.analogica)[nivel||"facil"];
 
-    const diasTrabalho = Number(document.getElementById("diasTrabalho").value) || 0;
-    const diasDiarista = Number(document.getElementById("diasDiarista").value) || 0;
-    const deslocamento = 50 * diasTrabalho;
-    const diarias      = diasTrabalho * 500 * (usarSocio ? 2 : 1);
-    const diarista     = diasDiarista * 120;
-    const despesas     = deslocamento + totalInfra + diarias + diarista;
-    const valorFinal   = Math.round((totalProdutos * mult + despesas) / 50) * 50;
+    const diasT=Number(document.getElementById("diasTrabalho").value)||0;
+    const diasD=Number(document.getElementById("diasDiarista").value)||0;
+    const desl=50*diasT;
+    const diarias=diasT*500*(usarSocio?2:1);
+    const diarista=diasD*120;
+    const despesas=desl+totalInfra+diarias+diarista;
+    const valorFinal=Math.round((totalProd*mult+despesas)/50)*50;
 
-    document.getElementById("resultado").innerHTML =
-        `<span>Valor final do projeto</span>${formatarMoeda(valorFinal)}`;
-
-    document.getElementById("info").innerHTML = `
-        <div class="info-resumo">
-            <div class="info-linha"><span>Equipamentos</span><strong>${formatarMoeda(totalProdutos)}</strong></div>
-            <div class="info-linha"><span>Infraestrutura</span><strong>${formatarMoeda(totalInfra)}</strong></div>
-            <div class="info-linha"><span>Serviço e despesas</span><strong>${formatarMoeda(despesas - totalInfra)}</strong></div>
-        </div>`;
+    document.getElementById("resultadoValor").textContent=fmt(valorFinal);
+    document.getElementById("rEquip").textContent=fmt(totalProd);
+    document.getElementById("rInfra").textContent=fmt(totalInfra);
+    document.getElementById("rServico").textContent=fmt(despesas-totalInfra);
 
     salvarEstado();
 }
 
+function toggleResumo() {
+    const toggle=document.getElementById("resumoToggle");
+    const itens=document.getElementById("resumoItens");
+    toggle.classList.toggle("aberto");
+    itens.classList.toggle("visivel");
+}
+
+// ── TIPO / APOIO ──
+document.querySelectorAll(".tipo-btn input").forEach(cb=>{
+    cb.closest(".tipo-btn").addEventListener("click",function(){
+        document.querySelectorAll(".tipo-btn input").forEach(o=>{ o.checked=false; o.closest(".tipo-btn").classList.remove("ativo"); });
+        cb.checked=true; this.classList.add("ativo"); calcular();
+    });
+});
+document.getElementById("apoioBtn").addEventListener("click",function(){
+    const cb=document.getElementById("usarSocio");
+    cb.checked=!cb.checked;
+    this.classList.toggle("ativo",cb.checked);
+    calcular();
+});
+document.querySelectorAll(".dias-item input").forEach(i=>i.addEventListener("input",calcular));
+document.querySelectorAll(".dias-item input").forEach(i=>{
+    i.addEventListener("focus",()=>{ if(i.value==="0") i.value=""; });
+    i.addEventListener("blur",()=>{ if(i.value==="") { i.value="0"; calcular(); } });
+});
+
 // ── PERSISTÊNCIA ──
 function salvarEstado() {
-    const estado = {
-        tipo: document.querySelector('input[name="tipo"]:checked')?.value || "analogica",
-        socio: document.getElementById("usarSocio").checked,
-        diasTrabalho: document.getElementById("diasTrabalho").value,
-        diasDiarista: document.getElementById("diasDiarista").value,
-        produtos: [],
-        infra: []
+    const estado={
+        tipo:document.querySelector('input[name="tipo"]:checked')?.value||"analogica",
+        socio:document.getElementById("usarSocio").checked,
+        diasTrabalho:document.getElementById("diasTrabalho").value,
+        diasDiarista:document.getElementById("diasDiarista").value,
+        produtos:[], infra:[]
     };
-    document.querySelectorAll(".item-produto").forEach(linha => {
-        const busca = linha.querySelector(".busca-wrapper");
-        estado.produtos.push({
-            codigo: busca ? busca.getValor() : "",
-            qtd: linha.querySelector(".produto-qtd").value
-        });
+    // produtos estão em ordem reversa (prepend), salvar na ordem correta
+    const prods=[...document.querySelectorAll(".item-produto")].reverse();
+    prods.forEach(card=>{
+        const busca=card.querySelector(".item-busca-wrapper");
+        estado.produtos.push({codigo:busca?busca.getValor():"", qtd:card.querySelector(".qtd-num").value});
     });
-    document.querySelectorAll(".item-infra").forEach(linha => {
-        const busca = linha.querySelector(".busca-wrapper");
-        estado.infra.push({
-            nome: busca ? busca.getValor() : "",
-            qtd: linha.querySelector(".produto-qtd").value
-        });
+    const infras=[...document.querySelectorAll(".item-infra")].reverse();
+    infras.forEach(card=>{
+        const busca=card.querySelector(".item-busca-wrapper");
+        estado.infra.push({nome:busca?busca.getValor():"", qtd:card.querySelector(".qtd-num").value});
     });
-    localStorage.setItem("cpz_estado", JSON.stringify(estado));
+    localStorage.setItem("cpz_estado",JSON.stringify(estado));
 }
 
 function restaurarEstado() {
     try {
-        const raw = localStorage.getItem("cpz_estado");
+        const raw=localStorage.getItem("cpz_estado");
         if (!raw) return false;
-        const estado = JSON.parse(raw);
-
-        document.querySelectorAll('input[name="tipo"]').forEach(cb => {
-            cb.checked = cb.value === estado.tipo;
+        const e=JSON.parse(raw);
+        document.querySelectorAll('input[name="tipo"]').forEach(cb=>{
+            cb.checked=cb.value===e.tipo;
+            cb.closest(".tipo-btn").classList.toggle("ativo",cb.value===e.tipo);
         });
-        document.getElementById("usarSocio").checked = estado.socio || false;
-        if (estado.diasTrabalho) document.getElementById("diasTrabalho").value = estado.diasTrabalho;
-        if (estado.diasDiarista) document.getElementById("diasDiarista").value = estado.diasDiarista;
-
-        if (estado.produtos && estado.produtos.length > 0) {
-            estado.produtos.forEach(p => adicionarProduto(p.codigo, p.qtd));
-        } else {
-            adicionarProduto();
-        }
-        if (estado.infra && estado.infra.length > 0) {
-            estado.infra.forEach(i => adicionarInfra(i.nome, i.qtd));
-        } else {
-            adicionarInfra();
-        }
+        const socio=document.getElementById("usarSocio");
+        socio.checked=e.socio||false;
+        document.getElementById("apoioBtn").classList.toggle("ativo",socio.checked);
+        if (e.diasTrabalho) document.getElementById("diasTrabalho").value=e.diasTrabalho;
+        if (e.diasDiarista) document.getElementById("diasDiarista").value=e.diasDiarista;
+        if (e.produtos&&e.produtos.length) e.produtos.forEach(p=>adicionarProduto(p.codigo,p.qtd));
+        else adicionarProduto();
+        if (e.infra&&e.infra.length) e.infra.forEach(i=>adicionarInfra(i.nome,i.qtd));
+        else adicionarInfra();
         return true;
-    } catch(e) {
-        console.error("Erro ao restaurar:", e);
-        return false;
-    }
+    } catch(err) { console.error(err); return false; }
 }
 
 function limparOrcamento() {
-    if (!confirm("Apagar o orçamento atual e começar do zero?")) return;
+    if (!confirm("Apagar o orçamento e começar do zero?")) return;
     localStorage.removeItem("cpz_estado");
-    document.getElementById("listaProdutos").innerHTML = "";
-    document.getElementById("listaInfra").innerHTML = "";
-    document.querySelectorAll('input[name="tipo"]').forEach((cb, i) => cb.checked = i === 0);
-    document.getElementById("usarSocio").checked = false;
-    document.getElementById("diasTrabalho").value = 1;
-    document.getElementById("diasDiarista").value = 1;
-    adicionarProduto();
-    adicionarInfra();
-    calcular();
-}
-
-function abrirPagamentos() {
-    alert("Próxima etapa: formas de pagamento.");
-}
-
-// ── EVENTOS ──
-document.querySelectorAll('input[name="tipo"]').forEach(cb => {
-    cb.addEventListener("click", function() {
-        document.querySelectorAll('input[name="tipo"]').forEach(o => o.checked = false);
-        this.checked = true;
-        calcular();
+    document.getElementById("listaProdutos").innerHTML="";
+    document.getElementById("listaInfra").innerHTML="";
+    document.querySelectorAll('input[name="tipo"]').forEach((cb,i)=>{
+        cb.checked=i===0; cb.closest(".tipo-btn").classList.toggle("ativo",i===0);
     });
-});
-document.querySelectorAll('input[type="number"]').forEach(c => c.addEventListener("input", calcular));
-document.getElementById("usarSocio").addEventListener("change", calcular);
+    document.getElementById("usarSocio").checked=false;
+    document.getElementById("apoioBtn").classList.remove("ativo");
+    document.getElementById("diasTrabalho").value=1;
+    document.getElementById("diasDiarista").value=1;
+    adicionarProduto(); adicionarInfra(); calcular();
+}
+
+function abrirPagamentos() { alert("Próxima etapa: formas de pagamento."); }
 
 // ── INIT ──
 async function init() {
     await carregarBanco();
-    const restaurado = restaurarEstado();
-    if (!restaurado) {
-        adicionarProduto();
-        adicionarInfra();
-    }
+    if (!restaurarEstado()) { adicionarProduto(); adicionarInfra(); }
     calcular();
 }
-
 init();
 
 </script>
